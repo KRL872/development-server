@@ -6,7 +6,7 @@
     Input: <Query>
     Output: <QueryResult>
     Usage: 
-        import database, {Query,QueryResult} from "./controllers/db"
+        import database, {Query,QueryResult} from "./database"
         database(query:Query):Promise<QueryResult>
     
 
