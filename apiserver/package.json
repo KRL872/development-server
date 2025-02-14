@@ -16,21 +16,26 @@
     "express-sessions",
     "passport",
     "discord",
-    "login",
     "google",
-    "login",
     "facebook",
-    "login",
-    "local",
-    "login"
+    "local"
   ],
   "author": "Kristopher Lancaster",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/connect-mongo": "^3.1.2",
+    "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.1",
+    "@types/mongodb": "^4.0.6",
     "@types/node": "^22.13.2",
+    "@types/passport": "^1.0.17",
+    "@types/passport-discord": "^0.1.14",
+    "@types/passport-google-oauth20": "^2.0.16",
+    "@types/passport-local": "^1.0.38",
+    "@types/pg": "^8.11.11",
     "express-session": "^1.18.1",
     "nodemon": "^3.1.9",
     "rimraf": "^6.0.1",
@@ -38,9 +43,17 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
+    "connect-mongo": "^5.1.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "express-sessions": "^1.0.6"
+    "mongodb": "^6.13.0",
+    "passport": "^0.7.0",
+    "passport-discord": "^0.1.4",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.13.3"
   }
 }
