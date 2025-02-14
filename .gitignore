@@ -1,3 +1,4 @@
 apiserver/build/
 apiserver/node_modules/
 apiserver/.env
+apiserver/package-lock.json
