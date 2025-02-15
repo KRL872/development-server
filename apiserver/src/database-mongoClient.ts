@@ -2,9 +2,11 @@ import { MongoClient } from "mongodb"
 import { connections, Query, QueryResult } from "./database"
 
 import MongoStore from "connect-mongo"
-
+import dotenv from "dotenv"
+dotenv.config();
 export const openMongo = async (query: Query): Promise<boolean> => {
     try {
+        console.log("URI: ",process.env.MONGO_DBURI)
         console.log(`Opening Database: ${query.database} with Provider: ${query.provider} `)
         const client = new MongoClient(process.env.MONGO_DBURI!)
         await client.connect();
