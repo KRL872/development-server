@@ -25,12 +25,12 @@ export default (auth: models.AuthenticationReturn): Router => {
     // Google Login Endpoint and Callback
     authRouter.get("/google", middleware.logoutMiddleWare, auth.google);
     authRouter.get("/google/redirect", auth.google, (req: Request, res: Response) => {
-        res.sendStatus(204) // Success, but No Content
+        res.status(204).redirect("http://bigrobot.ca:2000/") //Success, but No Content
     });
     // discord Login Endpoint and Callback
     authRouter.get("/discord", middleware.logoutMiddleWare, auth.discord);
     authRouter.get("/discord/redirect", auth.discord, (req: Request, res: Response) => {
-        res.sendStatus(204) //Success, but No Content
+        res.status(204).redirect("http://bigrobot.ca:2000/") //Success, but No Content
     });
 
 
