@@ -85,11 +85,30 @@ export default async (authConfig: models.AuthenticationConfig, app: Express): Pr
             database: authConfig.database,
             provider: authConfig.provider,
             filter: { accountEmail: email },
+            filterOptions: {_id: 0},
             permissionGroups: [
                 { group: "users", accessLevel: 100 },
             ]
         }
         return await authDatabase(findUserQwery)
+    }
+    const findProfileIdByEmail = async (email: string): Promise<QueryResult> => {
+       
+       
+        const findUserQwery: Query = {
+            collection: authConfig.userCollection,
+            method: "FIND",
+            database: authConfig.database,
+            provider: authConfig.provider,
+            filter: {accountEmail: email},
+            filterOptions: {projection: {profileID: 1, _id: 0}},
+            permissionGroups: [
+                { group: "users", accessLevel: 100 },
+            ]
+        }
+        const data = await authDatabase(findUserQwery)
+        console.log(data)
+        return data
     }
 
     const storeQuery: Query = {
