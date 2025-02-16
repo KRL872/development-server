@@ -31,7 +31,7 @@ export type User = {
     accountEmail: string,
     allowedAuthProviders: Array<string>,
     groups: Array<UserPermissions>,
-    info?: UserInfo
+    userID: number
 }
 
 
