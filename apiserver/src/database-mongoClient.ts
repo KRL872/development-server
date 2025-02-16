@@ -1,6 +1,5 @@
-import { MongoClient } from "mongodb"
+import { FindOptions,Document, Filter, MongoClient } from "mongodb"
 import { connections, Query, QueryResult } from "./database"
-
 import MongoStore from "connect-mongo"
 import dotenv from "dotenv"
 dotenv.config();
@@ -42,8 +41,7 @@ export const findMongo = async (query: Query): Promise<(QueryResult)> => {
     const client = connections.get(`${query.provider}-${query.database}`)
     if (!client || !(client instanceof MongoClient)) return { status: false, results: ["Error in Find"] };
     try {
-
-        const result = await client.db(query.database).collection(query.collection).find(query.filter).toArray();
+        const result = await client.db(query.database).collection(query.collection).find(query.filter, query.filterOptions).toArray();
         return { status: true, results: result };
     } catch (error) {
         console.log("Error", error)

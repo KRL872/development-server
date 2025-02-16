@@ -53,7 +53,8 @@ export type Query = {
     collection: string,
     permissionGroups: Array<models.UserPermissions>,
     method: models.method,
-    filter: {}
+    filter: {  },
+    filterOptions?: {  }
 
 }
 
