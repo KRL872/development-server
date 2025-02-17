@@ -9,7 +9,7 @@ export const openPostgres = async (query: Query): Promise<boolean> => {
             host: "localhost",
             port: 5432,
             user: "postgres",
-            password: "MooMoo2"
+            password: ""
         })
         await client.connect();
         connections.set(`${query.provider}-${query.database}`, client)
@@ -42,18 +42,38 @@ export const testPostgres = async (query: Query): Promise<boolean> => {
 
 }
 
-export const findPostgres = async (query: Query): Promise<QueryResult> => {
+export const findOnePostgres = async (query: Query): Promise<QueryResult> => {
     return { status: true, results: [{ email: "you@me.org" }] };
 }
-export const deletePostgres = async (query: Query): Promise<(QueryResult)> => {
+export const findManyPostgres = async (query: Query): Promise<QueryResult> => {
+    return { status: true, results: [{ email: "you@me.org" }] };
+}
+export const deleteOnePostgres = async (query: Query): Promise<(QueryResult)> => {
+    await Promise.resolve()
+    return {} as QueryResult
+}
+export const deleteManyPostgres = async (query: Query): Promise<(QueryResult)> => {
     await Promise.resolve()
     return {} as QueryResult
 }
 
-export const updatePostgres = async (query: Query): Promise<(QueryResult)> => {
+export const updateOnePostgres = async (query: Query): Promise<(QueryResult)> => {
     await Promise.resolve()
     return {} as QueryResult
 }
+export const updateManyPostgres = async (query: Query): Promise<(QueryResult)> => {
+    await Promise.resolve()
+    return {} as QueryResult
+}
+export const insertOnePostgres = async (query: Query): Promise<(QueryResult)> => {
+    await Promise.resolve()
+    return {} as QueryResult
+}
+export const insertManyPostgres = async (query: Query): Promise<(QueryResult)> => {
+    await Promise.resolve()
+    return {} as QueryResult
+}
+
 export const getStorePostgres = async (query: Query): Promise<(QueryResult)> => {
     await Promise.resolve()
     return {} as QueryResult

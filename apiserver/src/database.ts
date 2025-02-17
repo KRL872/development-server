@@ -19,11 +19,11 @@ dotenv.config();
 
 // Import MongoClient and Strategy
 import { MongoClient } from "mongodb";
-import { openMongo, closeMongo, testMongo, findMongo, deleteMongo, updateMongo, getStoreMongo } from "./database-mongoClient"
+import * as mongo from "./database-mongoClient"
 
 // Import PgClient and Strategy
 import { Client as PgClient } from "pg"
-import { openPostgres, closePostgres, testPostgres, findPostgres, deletePostgres, updatePostgres, getStorePostgres } from "./database-postgres"
+import * as post  from "./database-postgres"
 
 // Import OtherClient and Strategy
 //import {OtherClient} from "otherclient"
@@ -43,7 +43,7 @@ export const connections: Map<string, client> = new Map();
 export type QueryResult = {
     status: boolean,    //bad=false,good=true
     error?: string,     //optional  error string for status=false
-    results?: Array<any>, //optional results for status=true #TODO: change that any to something more specific
+    results: Array<any>, //optional results for status=true #TODO: change that any to something more specific
     store?: any
 }
 
@@ -51,9 +51,9 @@ export type Query = {
     database: string,
     provider: models.provider, // use the provider type
     collection: string,
-    permissionGroups: Array<models.UserPermissions>,
+    permissionGroups?: Array<models.UserPermissions>,
     method: models.method,
-    filter: {  },
+    filter: {},
     filterOptions?: {  }
 
 }
@@ -63,16 +63,16 @@ const _isOpen = (query: Query): boolean => connections.has(`${query.provider}-${
 
 // Do A Quick Test to See if the Database picked it open and Stable
 const _isStable = async (query: Query): Promise<boolean> => {
-    if (query.provider === "MONGOCLIENT") return await testMongo(query);
-    if (query.provider === "POSTGRESCLIENT") return await testPostgres(query);
+    if (query.provider === "MONGOCLIENT") return await mongo.testMongo(query);
+    if (query.provider === "POSTGRESCLIENT") return await post.testPostgres(query);
     //if (query.provider === "OTHERCLIENT") return await testOtherClient(query);
     return false
 
 }
 // Close the connection 
 const _close = async (query: Query): Promise<void> => {
-    if (query.provider === "MONGOCLIENT") await closeMongo(query);
-    if (query.provider === "POSTGRESCLIENT") await closePostgres(query);
+    if (query.provider === "MONGOCLIENT") await mongo.closeMongo(query);
+    if (query.provider === "POSTGRESCLIENT") await post.closePostgres(query);
     //if (query.provider === "OTHERCLIENT") await closeOtherClient(query);
     return
 }
@@ -86,8 +86,8 @@ const _close = async (query: Query): Promise<void> => {
 const _open = async (query: Query): Promise<boolean> => {
     if (_isOpen(query) && await _isStable(query)) return true;
     if (_isOpen(query) && !(await _isStable(query))) _close(query);
-    if ((!_isOpen(query)) && (query.provider === "MONGOCLIENT")) return openMongo(query)
-    if ((!_isOpen(query)) && (query.provider === "POSTGRESCLIENT")) return openPostgres(query)
+    if ((!_isOpen(query)) && (query.provider === "MONGOCLIENT")) return mongo.openMongo(query)
+    if ((!_isOpen(query)) && (query.provider === "POSTGRESCLIENT")) return post.openPostgres(query)
     //if ((!_isOpen(query)) && (query.provider === "OTHERCLIENT")) return openOtherClient(query)      
     if (!_isOpen(query)) {
         console.log(`Database Provider: ${query.provider} Not Implemented`)
@@ -107,34 +107,44 @@ export default async (query: Query): Promise<QueryResult> => {
     // a function to ALL providers.  Visually I beleive it to be easier to implement new commands and providers
     if (stabledb) {
         switch (query.method) {
-            case "FIND":
-                if (query.provider === "MONGOCLIENT") return findMongo(query);
-                if (query.provider === "POSTGRESCLIENT") return findPostgres(query);
-                // if (query.provider === "OTHERCLIENT") return findOtherClient(query);
-                return { status: false, error: `Database Method: ${query.method} Not Implemented For Provider: ${query.provider}` }
-            case "DELETE":
-                if (query.provider === "MONGOCLIENT") return deleteMongo(query);
-                if (query.provider === "POSTGRESCLIENT") return deletePostgres(query);
+            case "FIND1":
+                if (query.provider === "MONGOCLIENT") return mongo.findOneMongo(query);
+                if (query.provider === "POSTGRESCLIENT") return post.findOnePostgres(query);
+                // if (query.provider === "OTHERCLIENT") return findOneOtherClient(query);
+                return { status: false, error: `Database Method: ${query.method} Not Implemented For Provider: ${query.provider}`,results:[] }
+            case "FINDX":
+                if (query.provider === "MONGOCLIENT") return mongo.findManyMongo(query);
+                if (query.provider === "POSTGRESCLIENT") return post.findManyPostgres(query);
+                // if (query.provider === "OTHERCLIENT") return findOneOtherClient(query);
+                return { status: false, error: `Database Method: ${query.method} Not Implemented For Provider: ${query.provider}`,results:[] }
+            case "DELETE1":
+                if (query.provider === "MONGOCLIENT") return mongo.deleteOneMongo(query);
+                if (query.provider === "POSTGRESCLIENT") return post.deleteOnePostgres(query);
                 // if (query.provider === "OTHERCLIENT") return deleteOtherClient(query);
-                return { status: false, error: `Database Method: ${query.method} Not Implemented For Provider: ${query.provider}` }
-            case "UPDATE":  // Does Both Create OR Update 
-                if (query.provider === "MONGOCLIENT") return updateMongo(query);
-                if (query.provider === "POSTGRESCLIENT") return updatePostgres(query);
+                return { status: false, error: `Database Method: ${query.method} Not Implemented For Provider: ${query.provider}`,results:[] }
+            case "UPDATE1": 
+                if (query.provider === "MONGOCLIENT") return mongo.updateOneMongo(query);
+                if (query.provider === "POSTGRESCLIENT") return post.updateOnePostgres(query);
                 // if (query.provider === "OTHERCLIENT") return updateOtherClient(query);
-                return { status: false, error: `Database Method: ${query.method} Not Implemented For Provider: ${query.provider}` }
+                return { status: false, error: `Database Method: ${query.method} Not Implemented For Provider: ${query.provider}`,results:[] }
+            case "CREATE1": 
+                if (query.provider === "MONGOCLIENT") return mongo.insertOneMongo(query);
+                if (query.provider === "POSTGRESCLIENT") return post.insertOnePostgres(query);
+                // if (query.provider === "OTHERCLIENT") return updateOtherClient(query);
+                return { status: false, error: `Database Method: ${query.method} Not Implemented For Provider: ${query.provider}`,results:[] }           
             case "GETSTORE":
-                if (query.provider === "MONGOCLIENT") return getStoreMongo(query);
-                if (query.provider === "POSTGRESCLIENT") return getStorePostgres(query);
+                if (query.provider === "MONGOCLIENT") return mongo.getStoreMongo(query);
+                if (query.provider === "POSTGRESCLIENT") return post.getStorePostgres(query);
                 // if (query.provider === "OTHERCLIENT") return getStoreOtherClient(query);
-                return { status: false, error: `Database Method: ${query.method} Not Implemented For Provider: ${query.provider}` }
+                return { status: false, error: `Database Method: ${query.method} Not Implemented For Provider: ${query.provider}`,results:[] }
 
             // case "NEWCOMMAND":
             //     if (query.provider === "MONGOCLIENT") return commandMongo(query);
             //     if (query.provider === "POSTGRESCLIENT") return commandPostgres(query);
             //     // if (query.provider === "OTHERCLIENT") return commandOtherClient(query);
             //     return  {status:false, error:`Database Method: ${query.method} Not Implemented For Provider: ${query.provider}`}
-            default: return { status: false, error: `Database Method: ${query.method} Not Implemented` }
+            default: return { status: false, error: `Database Method: ${query.method} Not Implemented`,results:[] }
         }
     }
-    else return { status: false, error: `DataBase System is Not Working` }
+    else return { status: false, error: `DataBase System is Not Working` ,results:[]}
 }
