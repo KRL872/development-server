@@ -12,7 +12,7 @@ import * as utils from "./hashing"
 import * as models from "./models"
 dotenv.config();
 
-export default async (authConfig: models.AuthenticationConfig, app: Express): Promise<models.AuthenticationReturn> => {
+export default async (authConfig: models.DatabaseConfig, app: Express): Promise<models.AuthenticationReturn> => {
 
 
     const createDiscordStrategyOptions = (): DiscordStrategyOptions => ({
@@ -81,7 +81,7 @@ export default async (authConfig: models.AuthenticationConfig, app: Express): Pr
     const findUserByEmail = async (email: string): Promise<QueryResult> => {
         const findUserQwery: Query = {
             collection: authConfig.userCollection,
-            method: "FIND",
+            method: "FIND1",
             database: authConfig.database,
             provider: authConfig.provider,
             filter: { accountEmail: email },
@@ -97,7 +97,7 @@ export default async (authConfig: models.AuthenticationConfig, app: Express): Pr
        
         const findUserQwery: Query = {
             collection: authConfig.userCollection,
-            method: "FIND",
+            method: "FIND1",
             database: authConfig.database,
             provider: authConfig.provider,
             filter: {accountEmail: email},
