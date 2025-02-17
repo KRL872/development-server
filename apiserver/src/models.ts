@@ -1,9 +1,16 @@
 
-
 export type UserPermissions = {
     group: string,
     accessLevel: number
 }
+
+export type User = {
+    accountEmail: string,
+    allowedAuthProviders: Array<string>,
+    groups: Array<UserPermissions>,
+    profileID: number
+}
+
 export type Address = {
     buildingNumber?: number,
     street?: string,
@@ -24,14 +31,6 @@ export type UserInfo = {
     displayName?: string
     address?: Address,
     primaryPhone?: PhoneInfo
-    businessPhone?: PhoneInfo
-    emergencyPhone?: PhoneInfo
-}
-export type User = {
-    accountEmail: string,
-    allowedAuthProviders: Array<string>,
-    groups: Array<UserPermissions>,
-    profileID: number
 }
 
 
@@ -40,14 +39,15 @@ export type User = {
 export type provider = "MONGOCLIENT" | "POSTGRESCLIENT"
 // type provider = "MONGOCLIENT" | "POSTGRESCLIENT" |"OTHERCLIENT"
 
-export type method = "FIND" | "DELETE" | "UPDATE" | "GETSTORE"
+export type method = "FIND1" | "DELETE1" | "UPDATE1" | "CREATE1" | "FINDX" | 
+                        "DELETEX" | "UPDATEX"| "CREATEX" | "GETSTORE"
 //type method = "FIND" |"DELETE" |"UPDATE" |"GETSTORE" |"NEWCOMMAND"
 
 
 
 
 
-export type AuthenticationConfig = {
+export type DatabaseConfig = {
     database: string, // "apiservice"
     provider: provider, // MongoClient, Postgres
     store: string, // MongoStore

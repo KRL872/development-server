@@ -7,7 +7,7 @@ import authenticateInitialize from "./authenticate-passport-sessions"
 import * as models from "./models";
 import authRoutes from "./authRoutes"
 import userRoutes from "./userRoutes"
-
+import profileRoutes from "./profileRoutes"
 dotenv.config();
 
 const egg = async () => {
@@ -33,7 +33,7 @@ const egg = async () => {
     app.use(corsMiddleWare);
 
     // Initialize Authentication Strategy
-    const authConfig: models.AuthenticationConfig = {
+    const authConfig: models.DatabaseConfig = {
         database: "API",
         provider: "MONGOCLIENT",
         store: "MONGOSTORE",  //not implemented Yet
@@ -47,6 +47,7 @@ const egg = async () => {
 
     // Private Routes Need to Be Authenticated
     app.use("/users", userRoutes())
+    app.use("/profile", profileRoutes())
 
     // Backup To Catch All the Extra Requests
     app.all("*", (req: Request, res: Response) => {
